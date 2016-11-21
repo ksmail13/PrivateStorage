@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by micky on 11/22/16.
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AccessToken {
     private String username;
-    private List<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
     private String token;
 
 }

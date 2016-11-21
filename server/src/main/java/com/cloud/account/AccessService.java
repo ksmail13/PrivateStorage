@@ -1,5 +1,6 @@
 package com.cloud.account;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +18,18 @@ import java.util.HashSet;
 /**
  * Created by micky on 11/22/16.
  */
+@Log4j2
 @Service
 public class AccessService implements UserDetailsService {
-    @Value("user.name")
+    @Value("${user.id}")
     private String username;
-    @Value("user.password")
+    @Value("${user.password}")
     private String password;
+
+    public boolean checkUser(String username, String password) {
+        log.debug("username {} password {}", this.username, this.password);
+        return this.username.equals(username) && this.password.equals(password);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
