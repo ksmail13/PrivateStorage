@@ -27,7 +27,7 @@ public class AccessController {
                     (AccessService.UserInformation) service.loadUserByUsername(info.getUserId());
 
             return new AccessToken(information.getUsername(), information.getAuthorities(), session.getId());
-        }
+    }
 
         throw new UserNotFoundException(info.getUserId());
     }
