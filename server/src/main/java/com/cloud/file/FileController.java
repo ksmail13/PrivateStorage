@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * file api controller
  * Created by micky on 11/27/16.
  */
 @Controller
-@RequestMapping("/file")
+@RequestMapping(value = "/file", consumes = {"application/json"}, produces = {"application/json"})
 public class FileController {
 
     /**
@@ -47,6 +48,16 @@ public class FileController {
     @ResponseBody
     public List<FileInfo> updateSync(List<FileInfo> updateFiles) {
         // TODO : return files can update
+        return null;
+    }
+
+    /**
+     * sync finish signal
+     * @param completeFiles
+     * @return
+     */
+    @RequestMapping(name="/complete", method=RequestMethod.PUT)
+    public List<FileInfo> completeSync(List<FileInfo> completeFiles) {
         return null;
     }
 }

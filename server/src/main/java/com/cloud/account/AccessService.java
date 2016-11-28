@@ -1,6 +1,7 @@
 package com.cloud.account;
 
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ import java.util.HashSet;
 /**
  * Created by micky on 11/22/16.
  */
-@Log4j2
+@Slf4j
 @Service
 public class AccessService implements UserDetailsService {
     @Value("${user.id}")

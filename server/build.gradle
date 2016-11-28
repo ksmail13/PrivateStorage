@@ -34,12 +34,13 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-websocket')
 	compile('org.springframework.session:spring-session')
+    compile("org.springframework.boot:spring-boot-starter-integration")
+    compile("org.springframework.integration:spring-integration-file")
+    compile("org.springframework.integration:spring-integration-ftp")
 	compile('com.h2database:h2')
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
+
+
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-}
-
-configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
 }
