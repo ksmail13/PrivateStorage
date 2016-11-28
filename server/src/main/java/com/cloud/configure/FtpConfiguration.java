@@ -29,7 +29,6 @@ import java.util.Set;
  * Created by micky on 11/29/16.
  */
 @Configuration
-@XSlf4j
 public class FtpConfiguration {
 
     @Autowired
@@ -71,11 +70,12 @@ public class FtpConfiguration {
         return source;
     }
 
+    // TODO : Custom integrate channel
     @Bean
     @ServiceActivator(inputChannel = "PrivateFtpChannel")
     public MessageHandler handler() {
         return message -> {
-            FtpConfiguration.log.debug(message.getPayload());
+            System.out.println(message.getPayload());
         };
     }
 
