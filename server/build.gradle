@@ -27,7 +27,7 @@ repositories {
 
 
 dependencies {
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+
     compile('org.springframework.boot:spring-boot-starter-batch')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-security')
@@ -37,10 +37,16 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-integration")
     compile("org.springframework.integration:spring-integration-file")
     compile("org.springframework.integration:spring-integration-ftp")
+    compile('org.springframework.boot:spring-boot-starter-log4j2')
 	compile('com.h2database:h2')
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
 
+    compile("org.apache.ftpserver:ftpserver-core:1.0.6")
 
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
 }

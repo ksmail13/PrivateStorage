@@ -1,98 +1,45 @@
 package com.cloud.configure;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.net.ftp.FTPFile;
+import lombok.extern.log4j.Log4j2;
+import org.apache.ftpserver.FtpServer;
+import org.apache.ftpserver.FtpServerFactory;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.listener.ListenerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.core.MessageSource;
-import org.springframework.integration.file.filters.AbstractFileListFilter;
-import org.springframework.integration.file.remote.session.CachingSessionFactory;
-import org.springframework.integration.file.remote.session.SessionFactory;
-import org.springframework.integration.ftp.filters.FtpSimplePatternFileListFilter;
-import org.springframework.integration.ftp.inbound.FtpInboundFileSynchronizer;
-import org.springframework.integration.ftp.inbound.FtpInboundFileSynchronizingMessageSource;
-import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
-import org.springframework.messaging.MessageHandler;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.PostConstruct;
 
 /**
  * ftp server config
  * Created by micky on 11/29/16.
  */
 @Configuration
+@Log4j2
 public class FtpConfiguration {
 
     @Autowired
     private ServerConfig config;
 
-    @Bean
-    public SessionFactory<FTPFile> ftpFileSessionFactory() {
-        DefaultFtpSessionFactory sf = new DefaultFtpSessionFactory();
-        sf.setHost("localhost");
-        sf.setPort(config.getPort());
-        sf.setUsername(config.getUserId());
-        sf.setPassword(config.getPassword());
+    @Autowired
+    private UserManager userManager;
 
-        return new CachingSessionFactory<>(sf);
+    private FtpServer ftpServer;
+
+    @PostConstruct
+    private void setting() throws FtpException {
+        FtpServerFactory serverFactory = new FtpServerFactory();
+        ListenerFactory listenerFactory = new ListenerFactory();
+
+        listenerFactory.setPort(config.getPort()+1);
+
+        serverFactory.addListener("default", listenerFactory.createListener());
+        serverFactory.setUserManager(userManager);
+
+        ftpServer = serverFactory.createServer();
+        ftpServer.start();
+        log.debug("ftp running port = {}", config.getPort()+1);
     }
 
-    @Bean
-    public FtpInboundFileSynchronizer ftpInboundFileSynchronizer() {
-        FtpInboundFileSynchronizer fileSynchronizer = new FtpInboundFileSynchronizer(ftpFileSessionFactory());
-        // TODO : file remove will use trash system
-        fileSynchronizer.setDeleteRemoteFiles(false);
-        fileSynchronizer.setFilter(new FtpSimplePatternFileListFilter("*.*"));
-        fileSynchronizer.setRemoteDirectory("/");
-
-
-        return fileSynchronizer;
-    }
-
-    @Bean
-    @InboundChannelAdapter(channel="PrivateFtpChannel")
-    public MessageSource<File> ftpMessageSource() {
-        FtpInboundFileSynchronizingMessageSource source =
-                new FtpInboundFileSynchronizingMessageSource(ftpInboundFileSynchronizer());
-
-        source.setLocalDirectory(new File(config.getSyncDirectory()));
-        source.setAutoCreateLocalDirectory(true);
-        source.setLocalFilter(new DocPhotoFileListFilter());
-
-        return source;
-    }
-
-    // TODO : Custom integrate channel
-    @Bean
-    @ServiceActivator(inputChannel = "PrivateFtpChannel")
-    public MessageHandler handler() {
-        return message -> {
-            System.out.println(message.getPayload());
-        };
-    }
-
-    /**
-     * allow files only document or photo
-     */
-    class DocPhotoFileListFilter extends AbstractFileListFilter<File> {
-
-        private Set<String> allowExtensions = null;
-
-        @Override
-        protected boolean accept(File file) {
-            if(allowExtensions == null) {
-                // create immutable set
-                allowExtensions = Collections.unmodifiableSet(new HashSet<>(config.getAllowExtensions()));
-            }
-            return allowExtensions.contains(FilenameUtils.getExtension(file.getName()));
-        }
-    }
 }

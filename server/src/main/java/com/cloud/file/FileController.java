@@ -56,8 +56,9 @@ public class FileController {
      * @param completeFiles
      * @return
      */
-    @RequestMapping(name="/complete", method=RequestMethod.PUT)
-    public List<FileInfo> completeSync(List<FileInfo> completeFiles) {
+    @RequestMapping(path="/complete", method=RequestMethod.PUT)
+    @ResponseBody
+    public List<FileInfo> completeSync(@RequestBody List<FileInfo> completeFiles) {
         return null;
     }
 }
