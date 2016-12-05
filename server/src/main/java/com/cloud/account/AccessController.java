@@ -24,7 +24,7 @@ public class AccessController {
     @RequestMapping(value = "/access_token", method = RequestMethod.POST)
     @ResponseBody
     public AccessToken getAccessToken(@RequestBody LoginInfo info, HttpSession session) {
-        log.debug("access_token"+info);
+        log.debug("access_token "+info);
         if(service.checkUser(info.getUserId(), info.getPassword())) {
             AccessService.UserInformation information =
                     (AccessService.UserInformation) service.loadUserByUsername(info.getUserId());

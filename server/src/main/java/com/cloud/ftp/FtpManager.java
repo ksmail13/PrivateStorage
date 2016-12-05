@@ -132,7 +132,7 @@ public class FtpManager {
         userManagerFactory.setAdminName(config.getUserId());
         userManagerFactory.setFile(property);
 
-        manager=userManagerFactory.createUserManager();
+        manager = userManagerFactory.createUserManager();
 
         manager.save(initUser());
 
