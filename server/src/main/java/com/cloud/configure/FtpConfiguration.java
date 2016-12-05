@@ -1,5 +1,6 @@
 package com.cloud.configure;
 
+import com.cloud.ftp.FtpManager;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -7,7 +8,10 @@ import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 
 import javax.annotation.PostConstruct;
 
@@ -20,26 +24,13 @@ import javax.annotation.PostConstruct;
 public class FtpConfiguration {
 
     @Autowired
-    private ServerConfig config;
+    private FtpManager ftpServer;
 
-    @Autowired
-    private UserManager userManager;
-
-    private FtpServer ftpServer;
-
-    @PostConstruct
+    @EventListener({ApplicationReadyEvent.class})
     private void setting() throws FtpException {
-        FtpServerFactory serverFactory = new FtpServerFactory();
-        ListenerFactory listenerFactory = new ListenerFactory();
-
-        listenerFactory.setPort(config.getPort()+1);
-
-        serverFactory.addListener("default", listenerFactory.createListener());
-        serverFactory.setUserManager(userManager);
-
-        ftpServer = serverFactory.createServer();
         ftpServer.start();
-        log.debug("ftp running port = {}", config.getPort()+1);
     }
+
+
 
 }

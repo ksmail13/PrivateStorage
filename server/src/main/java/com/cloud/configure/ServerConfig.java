@@ -42,7 +42,11 @@ public class ServerConfig {
 
     private String syncDirectory;
 
+    @Autowired
     private void setSyncDirectory(@Value("${ftp.syncDirectory}") String syncDirectory) {
+        if(syncDirectory.charAt(0) == '~') {
+            syncDirectory = syncDirectory.replaceFirst("~", System.getProperty("user.local"));
+        }
         File syncDir = new File(syncDirectory);
         String realPath = null;
         if(!syncDir.exists()) {
@@ -65,6 +69,13 @@ public class ServerConfig {
     @Value("${ftp.idleTime}")
     @Setter(AccessLevel.PRIVATE)
     private String idleTime;
+
+    /**
+     * ftp user database
+     */
+    @Value("${ftp.userProperties}")
+    @Setter(AccessLevel.PRIVATE)
+    private String userProperties;
 
     public int getIdleTime() {
         return Integer.valueOf(idleTime);
