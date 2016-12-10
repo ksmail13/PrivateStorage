@@ -1,8 +1,10 @@
-package com.cloud.file;
+package com.cloud.file.model;
 
+import com.cloud.file.FileType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
+import lombok.NonNull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -18,22 +20,26 @@ import java.time.LocalDateTime;
 public class FileInfo {
 
     @Id
-    @GeneratedValue
-    @Column(name="id", unique = true, nullable = false)
-    private int fileId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="file_id", unique = true, nullable = false)
+    private Integer fileId;
 
     @Enumerated(EnumType.STRING)
     private FileType type;
 
-    private final String name;
+    @Column(unique = true, nullable = false)
+    @NonNull
+    private String name;
 
+    private Boolean using;
 
     @CreatedDate
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private final LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     @LastModifiedDate
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private final LocalDateTime modifiedTime;
+    private LocalDateTime modifiedTime;
 
 }
+

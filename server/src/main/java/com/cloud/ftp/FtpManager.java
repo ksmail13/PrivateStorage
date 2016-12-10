@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * Ftp server manager
  * Created by micky on 12/6/16.
  */
 @Component
 @Log4j2
 public class FtpManager {
-
 
     @Autowired
     private ServerConfig config;
@@ -37,6 +37,9 @@ public class FtpManager {
     @Autowired
     private ApplicationContext context;
 
+    /**
+     * server access lock
+     */
     private ReentrantLock ftpServerLock = new ReentrantLock();
 
     @Getter

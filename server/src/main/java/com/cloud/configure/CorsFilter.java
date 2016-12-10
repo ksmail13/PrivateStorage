@@ -3,8 +3,10 @@ package com.cloud.configure;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -12,20 +14,18 @@ import java.io.IOException;
  * Created by micky on 11/22/16.
  */
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsFilter implements Filter {
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException { }
-    @Override
-    public void destroy() { }
+public class CORSFilter extends OncePerRequestFilter {
+
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse res = (HttpServletResponse) response;
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        res.setHeader("Access-Control-Allow-Max-Age", "3600");
-        res.setHeader("Access-Control-Allow-Headers", "x-auth-token, content-type");
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        if("OPTIONS".equals(request.getMethod())) {
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Allow-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
+        }
 
         chain.doFilter(request, response);
     }

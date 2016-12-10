@@ -1,52 +1,78 @@
 package com.cloud.configure;
 
+import com.cloud.account.AccessService;
+import org.apache.logging.log4j.core.config.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.session.Session;
-import org.springframework.session.web.http.HeaderHttpSessionStrategy;
-import org.springframework.session.web.http.HttpSessionStrategy;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by micky on 11/22/16.
  */
 @Configuration
+@EnableWebSecurity
+@Order(SecurityProperties.IGNORED_ORDER)
 public class SecureConfiguration extends WebSecurityConfigurerAdapter{
+
+    @Autowired
+    private AccessService accessService;
+
+    @Autowired
+    private DaoAuthenticationProvider daoAuthenticationProvider;
+
+    @Autowired
+    private CORSFilter corsFilter;
+
+    @Bean
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        super.configure(web);
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(accessService);
+
+        return provider;
+    }
+
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().frameOptions().disable();
-        // h2 console
-        http.authorizeRequests().antMatchers(H2Configuration.H2_CONSOLE_URL+"*").permitAll();
-        // login
-        http.authorizeRequests().antMatchers("/access_token").permitAll();
-        // file sync
-        http.authorizeRequests().antMatchers("/file").hasRole("USER");
 
-        http.authorizeRequests().anyRequest().authenticated().and().logout();
+        http.addFilterBefore(corsFilter, ChannelProcessingFilter.class);
+        // @formatter:off
+        http
+                .requestMatcher(new AntPathRequestMatcher("/oauth/**"))
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // @formatter:on
     }
 
-    /**
-     * make session using x-auth-token
-     * @return
-     */
-    @Bean
-    public HttpSessionStrategy httpSessionStrategy() {
-        return new HeaderHttpSessionStrategy();
-    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers(H2Configuration.H2_CONSOLE_URL+"*");
 
+    }
 }

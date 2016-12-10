@@ -35,55 +35,64 @@ public class AccessService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if(username.equals(this.username))
-            return new UserInformation();
+            return new UserInformation(this.username, this.password);
 
         throw new UsernameNotFoundException(String.format("%s is not user", username));
     }
 
 
-    class UserInformation implements UserDetails {
-        class UserGrantedAuthority implements GrantedAuthority {
-            @Override
-            public String getAuthority() {
-                return "USER";
-            }
-        }
 
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            HashSet<UserGrantedAuthority> authorities = new HashSet<>();
-            authorities.add(new UserGrantedAuthority());
-            return Collections.unmodifiableSet(authorities);
-        }
+}
 
-        @Override
-        public String getPassword() {
-            return password;
-        }
+class UserInformation implements UserDetails {
+    private String username;
+    private String password;
 
+    UserInformation(String id, String password) {
+        username = id;
+        this.password = password;
+    }
+    class UserGrantedAuthority implements GrantedAuthority {
         @Override
-        public String getUsername() {
-            return username;
+        public String getAuthority() {
+            return "USER";
         }
+    }
 
-        @Override
-        public boolean isAccountNonExpired() {
-            return true;
-        }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        HashSet<UserGrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new UserGrantedAuthority());
+        return Collections.unmodifiableSet(authorities);
+    }
 
-        @Override
-        public boolean isAccountNonLocked() {
-            return true;
-        }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
-        @Override
-        public boolean isCredentialsNonExpired() {
-            return true;
-        }
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
-        @Override
-        public boolean isEnabled() {
-            return true;
-        }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

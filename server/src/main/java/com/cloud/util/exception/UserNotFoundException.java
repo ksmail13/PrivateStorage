@@ -1,4 +1,4 @@
-package com.cloud.util;
+package com.cloud.util.exception;
 
 /**
  * Created by micky on 11/22/16.

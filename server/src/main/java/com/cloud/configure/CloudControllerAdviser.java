@@ -1,9 +1,7 @@
 package com.cloud.configure;
 
-import com.cloud.util.UserNotFoundException;
+import com.cloud.util.exception.UserNotFoundException;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

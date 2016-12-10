@@ -1,5 +1,8 @@
-package com.cloud.file;
+package com.cloud.file.control;
 
+import com.cloud.file.model.FileInfo;
+import com.cloud.file.service.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +14,20 @@ import java.util.List;
  * Created by micky on 11/27/16.
  */
 @Controller
-@RequestMapping(value = "/file", consumes = {"application/json"}, produces = {"application/json"})
+@RequestMapping(value = "/api/file", consumes = {"application/json"}, produces = {"application/json"})
 public class FileController {
+
+    @Autowired
+    private FileService fileService;
 
     /**
      * request new file list
-     * @param baseTime client's last sync time
      * @return update file list
      */
     @RequestMapping(method=RequestMethod.GET)
     @ResponseBody
-    public List<FileInfo> downloadSync(@RequestParam long baseTime) {
-
-        // TODO : return update filelist
-        return null;
+    public List<FileInfo> getFileList() {
+        return fileService.getFileList();
     }
 
     /**

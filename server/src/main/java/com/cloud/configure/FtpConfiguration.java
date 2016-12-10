@@ -26,6 +26,10 @@ public class FtpConfiguration {
     @Autowired
     private FtpManager ftpServer;
 
+    /**
+     * run ftp server after tomcat execute
+     * @throws FtpException
+     */
     @EventListener({ApplicationReadyEvent.class})
     private void setting() throws FtpException {
         ftpServer.start();
