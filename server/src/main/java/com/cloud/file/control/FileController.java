@@ -7,27 +7,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
  * file api controller
  * Created by micky on 11/27/16.
  */
-@Controller
-@RequestMapping(value = "/api/file", consumes = {"application/json"}, produces = {"application/json"})
+@RestController
+@RequestMapping(path="/file", consumes = {"application/json"}, produces = {"application/json"})
 public class FileController {
 
     @Autowired
     private FileService fileService;
 
+
+
     /**
      * request new file list
      * @return update file list
      */
-    @RequestMapping(method=RequestMethod.GET)
+    @RequestMapping(path = {"", "/{subPath}"}, method=RequestMethod.GET)
     @ResponseBody
-    public List<FileInfo> getFileList() {
-        return fileService.getFileList();
+    public List<FileInfo> getFileList(@PathVariable(required = false) String subPath) throws FileNotFoundException {
+        return fileService.getFileList(subPath);
     }
 
     /**

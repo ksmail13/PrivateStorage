@@ -88,6 +88,7 @@ public class OAuth2ServerConfiguration {
                     .authorizedGrantTypes(PASSWORD, REFRESH_TOKEN)
                     .authorities("USER")
                     .scopes("read", "write", "delete")
+                    .accessTokenValiditySeconds(0)
                     .resourceIds(RESOURCE_ID)
                     .secret(CLIENT_SECRET);
 

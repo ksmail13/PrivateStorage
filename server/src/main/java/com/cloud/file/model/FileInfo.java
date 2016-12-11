@@ -1,45 +1,26 @@
 package com.cloud.file.model;
 
 import com.cloud.file.FileType;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
- *
- * Created by micky on 11/27/16.
+ * Created by micky on 2016. 12. 11..
  */
 @Data
-@Entity(name = "file")
-public class FileInfo {
+@JsonIgnoreProperties({"fullPath"})
+public final class FileInfo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="file_id", unique = true, nullable = false)
-    private Integer fileId;
+    private transient final String fullPath;
 
-    @Enumerated(EnumType.STRING)
-    private FileType type;
-
-    @Column(unique = true, nullable = false)
     @NonNull
-    private String name;
+    private final String name;
 
-    private Boolean using;
+    private final FileType type;
 
-    @CreatedDate
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime createTime;
-
-    @LastModifiedDate
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime modifiedTime;
+    private final String thumbnail;
 
 }
-

@@ -2,6 +2,7 @@ package com.cloud.file.service;
 
 import com.cloud.file.model.FileInfo;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -14,8 +15,9 @@ public interface FileService {
     /**
      * get file list that updated after timestamp
      * @return
+     * @param subPath
      */
-    List<FileInfo> getFileList();
+    List<FileInfo> getFileList(String subPath) throws FileNotFoundException;
 
     /**
      * create new file

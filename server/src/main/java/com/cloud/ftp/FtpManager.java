@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -110,7 +111,11 @@ public class FtpManager {
      */
     private Listener getListener() {
         ListenerFactory listenerFactory = new ListenerFactory();
-        port = ((AnnotationConfigEmbeddedWebApplicationContext)context).getEmbeddedServletContainer().getPort()+1;
+        if(context instanceof AnnotationConfigEmbeddedWebApplicationContext)
+            port = ((AnnotationConfigEmbeddedWebApplicationContext)context).getEmbeddedServletContainer().getPort()+1;
+        else if(context instanceof GenericWebApplicationContext) {
+            port = 10000;
+        }
         listenerFactory.setPort(port);
         log.info("ftp running on {}", port);
         return listenerFactory.createListener();

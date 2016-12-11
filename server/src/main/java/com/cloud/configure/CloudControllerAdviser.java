@@ -1,5 +1,6 @@
 package com.cloud.configure;
 
+import com.cloud.util.exception.AccessViolationException;
 import com.cloud.util.exception.UserNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,13 @@ public class CloudControllerAdviser {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleUserNotFoundException(Exception e) {
+        log.error(e);
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(AccessViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleAccessViolationException(AccessViolationException e) {
         log.error(e);
         return e.getMessage();
     }
