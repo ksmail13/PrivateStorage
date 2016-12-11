@@ -17,4 +17,9 @@
         android:orderInCategory="100"
         android:title="파일추가"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="로그아웃"
+        app:showAsAction="never" />
 </menu>
