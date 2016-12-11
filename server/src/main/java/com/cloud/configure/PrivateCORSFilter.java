@@ -14,7 +14,7 @@ import java.io.IOException;
  * Created by micky on 11/22/16.
  */
 @Component
-public class CORSFilter extends OncePerRequestFilter {
+public class PrivateCORSFilter extends OncePerRequestFilter {
 
 
     @Override
