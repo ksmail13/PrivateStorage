@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.androidtown.test.MainActivity">
+    <item
+        android:id="@+id/syncronization"
+        android:orderInCategory="100"
+        android:title="동기화"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/upload"
+        android:orderInCategory="100"
+        android:title="업로드"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/addFile"
+        android:orderInCategory="100"
+        android:title="파일추가"
+        app:showAsAction="never" />
+</menu>
