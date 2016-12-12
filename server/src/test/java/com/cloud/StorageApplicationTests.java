@@ -30,7 +30,7 @@ public class StorageApplicationTests {
 	@Test
 	public void imageUtilTest() throws Exception {
 
-	    String resizedImage = ImageUtil.createThumbnail(new File("/Users/micky/Downloads/005K1QsUgw1esq6037glzj30xc1e0ws7.jpg"), 200);
+	    String resizedImage = ImageUtil.createThumbnail("/Users/micky/Downloads",new File("/Users/micky/Downloads/005K1QsUgw1esq6037glzj30xc1e0ws7.jpg"), 200);
 		System.out.println(String.format("image size %d image payload %s", resizedImage.length(), resizedImage));
 	}
 

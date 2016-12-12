@@ -22,7 +22,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
-@Order(SecurityProperties.IGNORED_ORDER)
 public class SecureConfiguration extends WebSecurityConfigurerAdapter{
 
     @Autowired
@@ -33,6 +32,9 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private PrivateCORSFilter corsFilter;
+
+    @Autowired
+    private ServerConfig config;
 
     @Bean
     @Override
@@ -57,10 +59,8 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.addFilterBefore(corsFilter, ChannelProcessingFilter.class);
-        // @formatter:off
-        http
+        http.authorizeRequests().antMatchers("/thumbnail/**").permitAll()
+            .and().addFilterAfter(corsFilter, ChannelProcessingFilter.class)
                 .requestMatcher(new AntPathRequestMatcher("/oauth/**"))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -71,6 +71,7 @@ public class SecureConfiguration extends WebSecurityConfigurerAdapter{
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers(H2Configuration.H2_CONSOLE_URL+"*");
+
 
     }
 }

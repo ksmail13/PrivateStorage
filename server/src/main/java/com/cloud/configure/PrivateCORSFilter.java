@@ -24,7 +24,7 @@ public class PrivateCORSFilter extends OncePerRequestFilter {
         if("OPTIONS".equals(request.getMethod())) {
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
             response.setHeader("Access-Control-Allow-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
+            response.setHeader("Access-Control-Allow-Headers", "authorization, content-type, X-client-id");
         }
 
         chain.doFilter(request, response);

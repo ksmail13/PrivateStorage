@@ -1,6 +1,9 @@
 package com.cloud.file.control;
 
 import com.cloud.file.model.FileInfo;
+import com.cloud.file.model.FileRequestInfo;
+import com.cloud.file.model.FileResponseInfo;
+import com.cloud.file.model.PublicFileInfo;
 import com.cloud.file.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,44 +31,48 @@ public class FileController {
      * request new file list
      * @return update file list
      */
-    @RequestMapping(path = {"", "/{subPath}"}, method=RequestMethod.GET)
+    @RequestMapping(path = {"/list", "/{subPath}/list"}, method=RequestMethod.GET)
     @ResponseBody
-    public List<FileInfo> getFileList(@PathVariable(required = false) String subPath) throws FileNotFoundException {
+    public List<PublicFileInfo> getFileList(@PathVariable(required = false) String subPath) throws FileNotFoundException {
         return fileService.getFileList(subPath);
+    }
+
+    @RequestMapping(path = "/", method=RequestMethod.GET)
+    @ResponseBody
+    public FileResponseInfo downloadSync(@RequestParam String path) {
+        return fileService.downloadFile(path);
     }
 
     /**
      * Add new file update
-     * @param uploadFiles client upload file
+     * @param request client upload file information
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<FileInfo> uploadSync(List<FileInfo> uploadFiles) {
-        // TODO : return files can upload
-        return null;
+    public FileResponseInfo uploadSync(@RequestBody FileRequestInfo request) {
+        return fileService.uploadFile(request);
     }
 
     /**
      * update files(change or delete)
-     * @param updateFiles client update files
+     * @param request client update file information
      */
     @RequestMapping(method=RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<FileInfo> updateSync(List<FileInfo> updateFiles) {
-        // TODO : return files can update
-        return null;
+    public FileResponseInfo updateSync(@RequestBody FileRequestInfo request) {
+        return fileService.updateFile(request);
     }
 
     /**
      * sync finish signal
-     * @param completeFiles
-     * @return
+     * @param id work Id
      */
     @RequestMapping(path="/complete", method=RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public List<FileInfo> completeSync(@RequestBody List<FileInfo> completeFiles) {
-        return null;
+    public void completeSync(@RequestParam String id) {
+        fileService.complete(id);
     }
 }

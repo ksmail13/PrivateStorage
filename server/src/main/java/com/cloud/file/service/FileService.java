@@ -1,6 +1,8 @@
 package com.cloud.file.service;
 
-import com.cloud.file.model.FileInfo;
+import com.cloud.file.model.FileRequestInfo;
+import com.cloud.file.model.FileResponseInfo;
+import com.cloud.file.model.PublicFileInfo;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -17,19 +19,24 @@ public interface FileService {
      * @return
      * @param subPath
      */
-    List<FileInfo> getFileList(String subPath) throws FileNotFoundException;
+    List<PublicFileInfo> getFileList(String subPath) throws FileNotFoundException;
 
     /**
      * create new file
      * @param file
      * @return
      */
-    FileInfo uploadFile(FileInfo file);
+    FileResponseInfo uploadFile(FileRequestInfo file);
 
     /**
      * update file or delete file
      * @param file
      * @return
      */
-    FileInfo updateFile(FileInfo file);
+    FileResponseInfo updateFile(FileRequestInfo file);
+
+
+    void complete(String id);
+
+    FileResponseInfo downloadFile(String path);
 }

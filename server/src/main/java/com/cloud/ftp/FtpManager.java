@@ -71,7 +71,6 @@ public class FtpManager {
                 FtpServerFactory serverFactory = new FtpServerFactory();
                 serverFactory.addListener("default", getListener());
                 serverFactory.setUserManager(getUserManager());
-
                 ftpServer = serverFactory.createServer();
             }
             if (ftpServer.isStopped()) {

@@ -27,10 +27,6 @@ public class AccessService implements UserDetailsService {
     @Value("${user.password}")
     private String password;
 
-    public boolean checkUser(String username, String password) {
-        log.debug("username {} password {}", this.username, this.password);
-        return this.username.equals(username) && this.password.equals(password);
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,55 +40,3 @@ public class AccessService implements UserDetailsService {
 
 }
 
-class UserInformation implements UserDetails {
-    private String username;
-    private String password;
-
-    UserInformation(String id, String password) {
-        username = id;
-        this.password = password;
-    }
-    class UserGrantedAuthority implements GrantedAuthority {
-        @Override
-        public String getAuthority() {
-            return "USER";
-        }
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        HashSet<UserGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new UserGrantedAuthority());
-        return Collections.unmodifiableSet(authorities);
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-}

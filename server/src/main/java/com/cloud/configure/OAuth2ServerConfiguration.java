@@ -41,7 +41,8 @@ public class OAuth2ServerConfiguration {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .anyRequest().authenticated();
+                    .antMatchers("/thumbnail/**").permitAll()
+                    .antMatchers("/**").authenticated();
             // @formatter:on
         }
         @Override

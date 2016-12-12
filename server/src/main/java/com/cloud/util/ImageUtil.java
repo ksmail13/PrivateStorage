@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.io.FilenameUtils.getExtension;
@@ -20,27 +21,36 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
  * Created by micky on 2016. 12. 12..
  */
 public class ImageUtil {
-    public static final int RATIO = 0;
-    public static final int SAME = -1;
+    private static final int RATIO = 0;
+    private static final int SAME = -1;
 
     private static ConcurrentHashMap<File, String> thumbnailCache = new ConcurrentHashMap<>();
 
-    public static String createThumbnail(File src, int max) throws IOException {
+    public static String createThumbnail(String tempDir, File src, int max) throws IOException {
         if(thumbnailCache.containsKey(src)) return thumbnailCache.get(src);
 
         Image srcImg = getImageFromFile(src);
-        String thumbnail = null;
+        String thumbnailPath;
         if(srcImg.getWidth(null) > srcImg.getHeight(null))
-            thumbnail = resize(srcImg, max, RATIO);
+            thumbnailPath = resize(tempDir, srcImg, max, RATIO);
         else
-            thumbnail = resize(srcImg, RATIO, max);
+            thumbnailPath = resize(tempDir, srcImg, RATIO, max);
 
-        thumbnailCache.put(src, thumbnail);
+        thumbnailCache.put(src, thumbnailPath);
 
-        return thumbnail;
+        return thumbnailPath;
     }
 
-    private static String resize(Image srcImg, int width, int height) throws IOException {
+    /**
+     * create thumbnail image
+     * @param tempDir thumbnail directory path
+     * @param srcImg original image
+     * @param width thumbnail size
+     * @param height thumbnail size
+     * @return thumbnail image path
+     * @throws IOException
+     */
+    private static String resize(String tempDir, Image srcImg, int width, int height) throws IOException {
         int srcWidth = srcImg.getWidth(null);
         int srcHeight = srcImg.getHeight(null);
 
@@ -62,11 +72,11 @@ public class ImageUtil {
             destWidth = srcWidth;
             destHeight = srcHeight;
         } else if (width == RATIO) {
-            double ratio = ((double)destHeight) / ((double)srcHeight);
-            destWidth = (int)((double)srcWidth * ratio);
+            double ratio = ((double) destHeight) / ((double) srcHeight);
+            destWidth = (int) ((double) srcWidth * ratio);
         } else if (height == RATIO) {
-            double ratio = ((double)destWidth) / ((double)srcWidth);
-            destHeight = (int)((double)srcHeight * ratio);
+            double ratio = ((double) destWidth) / ((double) srcWidth);
+            destHeight = (int) ((double) srcHeight * ratio);
         }
 
         Image imgTarget = srcImg.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH);
@@ -79,12 +89,22 @@ public class ImageUtil {
         }
         BufferedImage destImg = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
         destImg.setRGB(0, 0, destWidth, destHeight, pixels, 0, destWidth);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Base64OutputStream base64os = new Base64OutputStream(baos, true, 0, null);
 
-        ImageIO.write(destImg, "jpg", base64os);
+        File thumbnailFile = createThumbnailFile(tempDir);
 
-        return baos.toString("UTF-8");
+        ImageIO.write(destImg, "jpg", thumbnailFile);
+
+        return thumbnailFile.getName();
+    }
+
+    private static File createThumbnailFile(String tempDir) {
+        File thumbnailFile;
+        do {
+            long time = new Date().getTime();
+            thumbnailFile = new File(String.format("%s/%d.jpg", tempDir, time));
+        }while(thumbnailFile.exists());
+        thumbnailFile.deleteOnExit();
+        return thumbnailFile;
     }
 
     private static Image getImageFromFile(File src) throws IOException {

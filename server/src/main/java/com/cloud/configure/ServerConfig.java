@@ -1,5 +1,6 @@
 package com.cloud.configure;
 
+import com.cloud.util.FileUtils;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -8,7 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PreDestroy;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.util.List;
 
 /**
@@ -38,6 +43,9 @@ public class ServerConfig {
 
     private String syncDirectory;
 
+    @Setter(AccessLevel.PRIVATE)
+    private String tempDirectory;
+
     /**
      * parse sync directory
      * ~ to home directory
@@ -49,15 +57,14 @@ public class ServerConfig {
             syncDirectory = syncDirectory.replaceFirst("~", System.getProperty("user.home"));
         }
 
-        File syncDir = new File(syncDirectory);
-        String realPath = null;
-        if(!syncDir.exists()) {
-            if (!syncDir.mkdirs()) {
-                throw new IllegalStateException("Couldn't create sync directory "+syncDirectory);
-            }
-        }
-        realPath = syncDir.getAbsolutePath();
-        this.syncDirectory = realPath;
+        File syncDir = FileUtils.createDirectory(syncDirectory);
+        File tempDir = FileUtils.createDirectory(syncDirectory+"/../.privatetemp/");
+        FileUtils.toHidden(tempDir);
+        tempDir.deleteOnExit();
+
+
+        this.syncDirectory = FileUtils.getCanonicalPath(syncDir);
+        this.tempDirectory = FileUtils.getCanonicalPath(tempDir);
         log.info("parsed directory {}", this.syncDirectory);
     }
 
@@ -82,4 +89,5 @@ public class ServerConfig {
     public int getIdleTime() {
         return Integer.valueOf(idleTime);
     }
+
 }
