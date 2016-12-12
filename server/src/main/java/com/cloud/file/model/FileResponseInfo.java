@@ -7,8 +7,4 @@ import lombok.Data;
  */
 @Data
 public class FileResponseInfo {
-    private String workId;
-    private String directory;
-    private String filename;
-    private FileRequestType type;
 }

@@ -17,21 +17,9 @@ import java.io.File;
 @SpringBootTest
 public class StorageApplicationTests {
 
-	@Autowired
-	private WebApplicationContext context;
+    @Test
+    public void test() {
 
-	private MockMvc mvc;
-
-	@Before
-	public void setup() {
-		mvc = MockMvcBuilders.webAppContextSetup(context).build();
-	}
-
-	@Test
-	public void imageUtilTest() throws Exception {
-
-	    String resizedImage = ImageUtil.createThumbnail("/Users/micky/Downloads",new File("/Users/micky/Downloads/005K1QsUgw1esq6037glzj30xc1e0ws7.jpg"), 200);
-		System.out.println(String.format("image size %d image payload %s", resizedImage.length(), resizedImage));
-	}
+    }
 
 }

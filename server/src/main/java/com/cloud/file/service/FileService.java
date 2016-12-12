@@ -39,4 +39,6 @@ public interface FileService {
     void complete(String id);
 
     FileResponseInfo downloadFile(String path);
+
+    List<FileResponseInfo> multiUpdateFile(List<FileRequestInfo> request);
 }

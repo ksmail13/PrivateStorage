@@ -37,7 +37,7 @@ public class FileController {
         return fileService.getFileList(subPath);
     }
 
-    @RequestMapping(path = "/", method=RequestMethod.GET)
+    @RequestMapping(method=RequestMethod.GET)
     @ResponseBody
     public FileResponseInfo downloadSync(@RequestParam String path) {
         return fileService.downloadFile(path);
@@ -63,6 +63,13 @@ public class FileController {
     @ResponseBody
     public FileResponseInfo updateSync(@RequestBody FileRequestInfo request) {
         return fileService.updateFile(request);
+    }
+
+    @RequestMapping(path="/multi", method=RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<FileResponseInfo> multiUpdateSync(@RequestBody List<FileRequestInfo> request) {
+        return fileService.multiUpdateFile(request);
     }
 
     /**

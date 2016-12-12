@@ -1,6 +1,7 @@
 package com.cloud.configure;
 
 import com.cloud.exception.*;
+import com.cloud.file.model.ErrorFileResponseInfo;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/error")
 public class PrivateControllerAdviser implements ErrorController {
 
-    public ErrorMessage errorHandler(Throwable e) {
-        ErrorMessage msg = new ErrorMessage();
+    public ErrorFileResponseInfo errorHandler(Throwable e) {
+        ErrorFileResponseInfo msg = new ErrorFileResponseInfo();
         log.error(e);
         msg.setError(e.getClass().getSimpleName());
         msg.setMessage(e.getMessage());
@@ -27,34 +28,34 @@ public class PrivateControllerAdviser implements ErrorController {
     @ExceptionHandler(AccessViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessage handleAccessViolationException(AccessViolationException e) {
+    public ErrorFileResponseInfo handleAccessViolationException(AccessViolationException e) {
         return errorHandler(e);
     }
 
     @ExceptionHandler(FileAlreadyUseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessage handleFileAlreadyUseError(FileAlreadyUseException e) {
+    public ErrorFileResponseInfo handleFileAlreadyUseError(FileAlreadyUseException e) {
         return errorHandler(e);
     }
 
     @ExceptionHandler(FileExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessage handleFileExistError(FileExistException e) {
+    public ErrorFileResponseInfo handleFileExistError(FileExistException e) {
         return errorHandler(e);
     }
 
     @ExceptionHandler(FileNotExistException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorMessage handleFileNotExistError(FileNotExistException e) {
+    public ErrorFileResponseInfo handleFileNotExistError(FileNotExistException e) {
         return errorHandler(e);
     }
 
     @ExceptionHandler(LockException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleLockException(LockException e) {
+    public ErrorFileResponseInfo handleLockException(LockException e) {
         return errorHandler(e);
     }
 
@@ -65,9 +66,4 @@ public class PrivateControllerAdviser implements ErrorController {
 
 
 
-}
-@Data
-class ErrorMessage {
-    private String error;
-    private String message;
 }

@@ -19,6 +19,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -94,6 +95,7 @@ public class DefaultFileService implements FileService {
 
         if(fileExistCheck(filePath))
             throw new FileExistException(filePath);
+
         FileInfoBuilder builder = new FileInfoBuilder();
         builder.setInnerFullPath(config.getSyncDirectory()+filePath)
                 .setFullPath(filePath)
@@ -101,7 +103,7 @@ public class DefaultFileService implements FileService {
                 .setName(file.getFilename());
         FileInfo info = builder.build();
 
-        FileResponseInfo response = mapper.convertValue(file, FileResponseInfo.class);
+        SuccessFileResponseInfo response = mapper.convertValue(file, SuccessFileResponseInfo.class);
         String workingId = UUID.randomUUID().toString();
 
         response.setWorkId(workingId);
@@ -128,7 +130,7 @@ public class DefaultFileService implements FileService {
         String workingId = UUID.randomUUID().toString();
         fileLock.put(workingId, info);
 
-        FileResponseInfo response = mapper.convertValue(file, FileResponseInfo.class);
+        SuccessFileResponseInfo response = mapper.convertValue(file, SuccessFileResponseInfo.class);
         response.setWorkId(workingId);
         saveLog(response, info);
         return response;
@@ -158,7 +160,7 @@ public class DefaultFileService implements FileService {
         String workingId = UUID.randomUUID().toString();
         fileLock.put(workingId, info);
 
-        FileResponseInfo response = new FileResponseInfo();
+        SuccessFileResponseInfo response = new SuccessFileResponseInfo();
         response.setWorkId(workingId);
         response.setFilename(FilenameUtils.getName(path));
         response.setDirectory(FilenameUtils.getFullPath(path));
@@ -168,8 +170,50 @@ public class DefaultFileService implements FileService {
         return response;
     }
 
+    @Override
+    public List<FileResponseInfo> multiUpdateFile(List<FileRequestInfo> request) {
+        List<FileResponseInfo> responseInfoList = new ArrayList<>();
+        for(FileRequestInfo req : request) {
+            FileResponseInfo res;
+            switch (req.getType()) {
+                case CREATE:
+                    try {
+                        responseInfoList.add(uploadFile(req));
+                    } catch (FileExistException e) {
+                        responseInfoList.add(createErrorResponse(e, req.getDirectory()+"/"+req.getFilename()));
+                    }
+                    break;
+                case UPDATE:
+                case DELETE:
+                    try {
+                        responseInfoList.add(updateFile(req));
+                    } catch(FileNotExistException | FileAlreadyUseException e) {
+                        responseInfoList.add(createErrorResponse(e, req.getDirectory()+"/"+req.getFilename()));
+                    }
+                    break;
+                case READ:
+                    try {
+                        responseInfoList.add(downloadFile(req.getDirectory()+"/"+req.getFilename()));
+                    } catch(FileNotExistException | FileAlreadyUseException e) {
+                        responseInfoList.add(createErrorResponse(e, req.getDirectory()+"/"+req.getFilename()));
+                    }
+                    break;
+            }
+        }
+
+        return responseInfoList;
+    }
+
+    private ErrorFileResponseInfo createErrorResponse(Throwable e, String filename) {
+        ErrorFileResponseInfo err = new ErrorFileResponseInfo();
+        err.setError(e.getClass().getSimpleName());
+        err.setMessage(e.getMessage());
+        err.setFilename(filename);
+        return err;
+    }
+
     private void saveLog(FileResponseInfo file, FileInfo info) {
-        saveLog(file.getWorkId(), file.getType(), info.getInnerFullPath());
+        saveLog(((SuccessFileResponseInfo)file).getWorkId(), ((SuccessFileResponseInfo)file).getType(), info.getInnerFullPath());
     }
 
     private void saveLog(String id, FileRequestType type, String filepath) {
