@@ -159,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
                             public void onResult(Boolean r) {
                                 Toast.makeText(getApplicationContext(), curData + " 다운로드 완료", Toast.LENGTH_LONG).show();
                             }
+                            public void onError(int errorCode, String errorMessage, Throwable e) {
+                                    Log.e(TAG, "onError: " + errorMessage, e);
+                                    Toast.makeText(getApplicationContext(), "errorCode "+ errorCode + " : " + errorMessage, Toast.LENGTH_LONG).show();
+                            }
 
                         };
                         Download.setServerFilePath(curData);
@@ -324,6 +328,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onResult(Boolean r) {
                             Toast.makeText(getApplicationContext(), curData + "업로드 완료", Toast.LENGTH_LONG).show();
+                        }
+
+                        public void onError(int errorCode, String errorMessage, Throwable e) {
+                            Log.e(TAG, "onError: " + errorMessage, e);
+                            Toast.makeText(getApplicationContext(), "errorCode "+ errorCode + " : " + errorMessage, Toast.LENGTH_LONG).show();
                         }
 
                     };

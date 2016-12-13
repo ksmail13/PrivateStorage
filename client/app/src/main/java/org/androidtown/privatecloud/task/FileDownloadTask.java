@@ -36,6 +36,9 @@ public abstract class FileDownloadTask extends FTPAsyncTask {
         this.execute(serverFilePath);
     }
 
+    public void onError(String error, String errorMessage) {
+        Log.e(TAG, "onError: "+error+errorMessage );
+    }
     @Override
     protected void onPostExecute(Boolean r) { onResult(r); }
 
@@ -46,6 +49,7 @@ public abstract class FileDownloadTask extends FTPAsyncTask {
         if(response.getError() != null) {
             Log.e(TAG, response.getError());
             Log.e(TAG, response.getMessage());
+            onError(response.getError(),response.getMessage());
             return false;
         }
         result = ftpDownload(strings);
