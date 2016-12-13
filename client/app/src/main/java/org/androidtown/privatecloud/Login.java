@@ -19,7 +19,7 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.androidtown.privatecloud.model.LoginResponse;
-import org.androidtown.privatecloud.util.RequestAsyncTask;
+import org.androidtown.privatecloud.task.RequestAsyncTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,6 +80,8 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("Private", MODE_PRIVATE);
                 SharedPreferences.Editor edit =  prefs.edit();
                 edit.putString("access_token", result.getToken_type()+" "+result.getAccess_token());
+                edit.putString("login_id",emailText.getText().toString());
+                edit.putString("login_password",passwordText.getText().toString());
                 edit.putBoolean("login", true);
                 edit.commit();
 

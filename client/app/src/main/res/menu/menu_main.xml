@@ -8,9 +8,9 @@
         android:title="동기화"
         app:showAsAction="never" />
     <item
-        android:id="@+id/upload"
+        android:id="@+id/externalFileList"
         android:orderInCategory="100"
-        android:title="업로드"
+        android:title="외부파일목록"
         app:showAsAction="never" />
     <item
         android:id="@+id/addFile"

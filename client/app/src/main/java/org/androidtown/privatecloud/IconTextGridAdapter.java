@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +54,15 @@ public class IconTextGridAdapter extends BaseAdapter {
         } else {
             itemView = (IconTextView) convertView;
         }
+        IconTextItem item = mItems.get(position);
+        if(item.getThumbnail() != null) {
+            Picasso.with(mContext).load(item.getThumbnail()).into(itemView.mIcon);
+        }
+        else {
+            itemView.setIcon(item.getIcon());
+        }
 
-        itemView.setIcon(mItems.get(position).getIcon());
-        itemView.setText(0, mItems.get(position).getData(0));
+        itemView.setText(0, item.getData());
         return itemView;
     }
 }

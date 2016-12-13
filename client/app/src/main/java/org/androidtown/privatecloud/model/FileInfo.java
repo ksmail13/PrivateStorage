@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class FileInfo {
+    private String fullPath;
     private String name;
     private FileType type;
     private String thumbnail;

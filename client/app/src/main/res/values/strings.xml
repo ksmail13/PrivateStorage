@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PrivateCloud</string>
+
+    <string name="title_delete">Delete</string>
+    <string name="title_upload">Upload</string>
+    <string name="hello_world">Upload</string>
 </resources>

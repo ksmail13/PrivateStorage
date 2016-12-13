@@ -9,23 +9,28 @@ import android.graphics.drawable.Drawable;
 public class IconTextItem {
     private Drawable mIcon;
     private String mData;
+    private String mThumbnail;
 
     public IconTextItem(Drawable icon, String obj){
-        mIcon = icon;
-        mData = obj;
+        this(icon, obj, null);
     }
 
+    public IconTextItem(Drawable mIcon, String mData, String mThumbnail) {
+        this.mIcon = mIcon;
+        this.mData = mData;
+        this.mThumbnail = mThumbnail;
+    }
 
     public String getData() {
         return mData;
     }
 
-    public String getData(int index){
-        if (mData == null){
-            return null;
-        }
+    public String getThumbnail() {
+        return mThumbnail;
+    }
 
-        return mData;
+    public void setThumbnail(String mThumbnail) {
+        this.mThumbnail = mThumbnail;
     }
 
     public void setData(String obj) {
