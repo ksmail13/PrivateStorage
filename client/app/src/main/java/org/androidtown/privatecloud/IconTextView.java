@@ -22,9 +22,9 @@ public class IconTextView extends LinearLayout {
         inflater.inflate(R.layout.item, this, true);
 
         mIcon = (ImageView) findViewById(R.id.iconItem);
-        mIcon.setImageDrawable(aItem.getIcon());
+        //mIcon.setImageDrawable(aItem.getIcon());
         mText = (TextView) findViewById(R.id.dataItem);
-        mText.setText(aItem.getData(0));
+        mText.setText(aItem.getData());
     }
     public void  setText(int index, String data){
         if(index ==0) {
