@@ -183,3 +183,7 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+client/.idea/compiler.xml
+client/.idea/copyright/profiles_settings.xml
+client/.idea/vcs.xml
+client/.idea/runConfigurations.xml

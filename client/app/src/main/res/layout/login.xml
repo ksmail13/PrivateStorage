@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ff000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:src = "@drawable/cloud2"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:src="@drawable/bkimage2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:padding="0sp"/>
+
+        <LinearLayout
+            android:id="@+id/email_login_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#66ffffff"
+            android:layout_marginBottom="126dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="20dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/email"
+                android:layout_width="300dp"
+                android:gravity="center"
+
+                android:layout_height="wrap_content"
+                android:hint="user  id"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:textColorHint="#000000"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/password"
+                android:gravity="center"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="passsword"
+                android:imeActionLabel="Login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_marginBottom="20dp"
+                android:textColorHint="#000000"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/Blogin"
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/sbutton"
+                android:onClick="onLoginClicked" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>
