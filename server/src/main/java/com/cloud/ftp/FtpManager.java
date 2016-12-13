@@ -12,6 +12,9 @@ import org.apache.ftpserver.listener.Listener;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission;
+import org.apache.ftpserver.usermanager.impl.TransferRatePermission;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
 import org.springframework.context.ApplicationContext;
@@ -22,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -156,6 +160,8 @@ public class FtpManager {
         user.setPassword(config.getPassword());
         user.setMaxIdleTime(config.getIdleTime());
         user.setHomeDirectory(config.getSyncDirectory());
+        user.setAuthorities(Arrays.asList(new WritePermission()
+                , new ConcurrentLoginPermission(10, 100)));
         user.setEnabled(true);
         return user;
     }

@@ -39,7 +39,7 @@ public class FileUtils {
         try {
             Files.setAttribute(f.toPath(), "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
         } catch (IOException | UnsupportedOperationException e ) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }

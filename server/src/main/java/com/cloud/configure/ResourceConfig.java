@@ -31,7 +31,7 @@ public class ResourceConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        String thumbnailPath = "file:"+config.getTempDirectory();
+        String thumbnailPath = "file:///"+config.getTempDirectory()+"/";
         try {
             Resource r  = context.getResource(thumbnailPath);
 

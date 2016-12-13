@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -57,14 +58,14 @@ public class ServerConfig {
             syncDirectory = syncDirectory.replaceFirst("~", System.getProperty("user.home"));
         }
 
-        File syncDir = FileUtils.createDirectory(syncDirectory);
+        File syncDir = FileUtils.createDirectory(syncDirectory+"/");
         File tempDir = FileUtils.createDirectory(syncDirectory+"/../.privatetemp/");
         FileUtils.toHidden(tempDir);
         tempDir.deleteOnExit();
 
 
-        this.syncDirectory = FileUtils.getCanonicalPath(syncDir);
-        this.tempDirectory = FileUtils.getCanonicalPath(tempDir);
+        this.syncDirectory = FilenameUtils.normalize(FileUtils.getCanonicalPath(syncDir), true);
+        this.tempDirectory = FilenameUtils.normalize(FileUtils.getCanonicalPath(tempDir), true);
         log.info("parsed directory {}", this.syncDirectory);
     }
 

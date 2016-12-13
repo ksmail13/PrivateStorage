@@ -119,11 +119,17 @@ public class DefaultFileService implements FileService {
     public FileResponseInfo updateFile(FileRequestInfo file) {
         String filePath = String.format("/%s/%s",file.getDirectory(), file.getFilename()).replace("//", "/");
 
-        if(!fileExistCheck(filePath, true)) {
-            throw new FileNotExistException(filePath);
-        }
-        if(fileUseCheck(filePath)) {
-            throw new FileAlreadyUseException(filePath);
+        if(file.getType() == FileRequestType.CREATE) {
+            if(fileExistCheck(filePath)) {
+                throw new FileExistException(filePath);
+            }
+        } else {
+            if (!fileExistCheck(filePath, true)) {
+                throw new FileNotExistException(filePath);
+            }
+            if (fileUseCheck(filePath)) {
+                throw new FileAlreadyUseException(filePath);
+            }
         }
 
         FileInfo info = FileInfoBuilder.find(filePath);
@@ -253,10 +259,10 @@ public class DefaultFileService implements FileService {
      */
     private boolean fileExistCheck(String filePath, boolean realCheck) {
         FileInfoBuilder builder = new FileInfoBuilder();
-        File file = new File(config.getSyncDirectory()+filePath);
+        File file = new File(config.getSyncDirectory()+"/"+filePath);
         boolean exist = file.exists();
         FileInfo cached = FileInfoBuilder.find(filePath);
-        if(exist && cached == null) {
+        if(exist && cached == null || !realCheck) {
             builder.setInnerFullPath(FileUtils.getCanonicalPath(file))
                     .setFullPath(filePath)
                     .setName(file.getName())
